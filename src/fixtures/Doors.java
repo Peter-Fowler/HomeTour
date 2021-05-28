@@ -1,10 +1,12 @@
 package fixtures;
 
+import fixtures.Room;
+
 public class Doors extends Fixture {
 
-	String[] adjoiningRooms = new String[2];
+	Room[] adjoiningRooms = new Room[2];
 	
-	public Doors(String name, String shortDecrption, String longDescription, String room1, String room2) {
+	public Doors(String name, String shortDecrption, String longDescription, Room room1, Room room2) {
 		super(name, shortDecrption, longDescription);
 		this.adjoiningRooms[0] = room1;
 		this.adjoiningRooms[1] = room2;
@@ -26,7 +28,7 @@ public class Doors extends Fixture {
 		return this.name;
 	}
 	
-	public String[] getAdjoiningRooms() {
+	public Room[] getAdjoiningRooms() {
 		return this.adjoiningRooms;
 	}
 }

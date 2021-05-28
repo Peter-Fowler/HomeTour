@@ -2,6 +2,8 @@ package game;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import fixtures.Doors;
 import fixtures.Room;
 
 public class RoomManager {
@@ -11,6 +13,8 @@ public class RoomManager {
 	Room nextRoom;
 	
 	Room[] rooms;
+	
+	Doors[] allDoors;
 	
 	public void init() {
 
@@ -36,7 +40,6 @@ public class RoomManager {
 				"About one third the size of the front porch and shares the back \nwith the rear porch.");
 		
 		this.startingRoom = frontPorch;
-		this.nextRoom = livingRoom;
 
 		rooms = new Room[] { frontPorch, livingRoom, bonusRoom, bedroom, bathroom, kitchen, rearPorch,
 				screenedPorch };
@@ -61,14 +64,29 @@ public class RoomManager {
 		screenedPorch.setExits("Bedroom", bedroom);
 		screenedPorch.setExits("Rear Porch", rearPorch);
 		
+		
+
+		Doors frontDoor = new Doors("Front Door", "The front door", "", frontPorch, livingRoom);
+		Doors bonusDoor = new Doors("Bonus room door", "The bonus room door", "", livingRoom, bonusRoom);
+		Doors bedroomDoor = new Doors("Bedroom door", "The bedroom door", "", livingRoom, bedroom);
+		Doors bathroomDoor = new Doors("Bathroom door", "The bathroom door", "", livingRoom, bathroom);
+		Doors kitchenDoor = new Doors("Kitchen entrence", "The kitchen entrence", "", livingRoom, kitchen);
+		Doors rearDoor = new Doors("Rear door", "The back door", "", kitchen, rearPorch);
+		Doors screenedDoor = new Doors ("Screen Door", "A screen door", "", rearPorch, screenedPorch);
+		Doors bed2ScreenDoor = new Doors("Bedroom door", "The bedroom door to the screened porch", "", bedroom, screenedPorch);
+		Doors bed2BathDoor = new Doors("Bathroom door", "Door between the bedroom and the bathroom", "", bedroom, bathroom);
+		
+		allDoors = new Doors[] {frontDoor, bonusDoor, bedroomDoor, bathroomDoor, kitchenDoor, rearDoor, screenedDoor, bed2ScreenDoor, bed2BathDoor};
+		
 	}
 
 	public Room getSartingRoom() {
 		return startingRoom;
 	}
 	/*
-	 * command[] contains the user input which should hold a location
-	 */
+	 * command[] contains the user input which should hold a location...
+	 * could not get the key part of the map to work with me...
+	 *
 	public void moveRooms(String[] command, Player player) {
 		Map<String, Room> leave = new HashMap<String, Room>();
 		leave = player.currentRoom.getExits();
@@ -108,10 +126,46 @@ public class RoomManager {
 		}
 	}
 
+	 		*/ // someday I'll figure map keys out, but not today...
+	
+	public void moveRoomThroughDoor(String[] command, Player player) {
+		
+		Doors[] allDoors = getAllDoors();
+		
+		String tempWords = "Front Porch";
+		
+		tempWords = combineStrings(command);
+		
+		for (int i = 0; i < allDoors.length; i++) {
+			
+			Room[] tempDoor = allDoors[i].getAdjoiningRooms();
+			
+			for (int j = 0; j < 2; j++) {
+				System.out.println("the tempDoor: " + tempDoor[j] + "\nthe currentRoom: " + player.currentRoom.getName());
+				if (tempDoor[j].getName().equalsIgnoreCase(player.currentRoom.getName())) {
+					
+					for (int d = 0; d < 2; d++) {
+						if (tempDoor[d].getName().equalsIgnoreCase(tempWords)){
+							
+							player.currentRoom = tempDoor[d];
+						}
+					}
+				
+				}
+			}
+		}
+		
+	}
+	
+	public Doors[] getAllDoors() {
+		
+		return this.allDoors;
+	}
+
 	private String combineStrings(String[] temp) {
 		StringBuilder sb = new StringBuilder();
 		
-		for (int i = 0; i < temp.length; i++) {
+		for (int i = 1; i < temp.length; i++) {
 			sb.append(temp[i] + " ");
 			
 		}
@@ -135,16 +189,6 @@ public class RoomManager {
 		return s;
 	}
 	
-	/*
-		Doors front = new Doors("Front Door", "The front door", "", "frontPorch", "livingRoom");
-		Doors bonusDoor = new Doors("Bonus room door", "The bonus room door", "", "livingRoom", "bonusRoom");
-		Doors bedroomDoor = new Doors("Bedroom door", "The bedroom door", "", "livingRoom", "bedroom");
-		Doors bathroomDoor = new Doors("Bathroom door", "The bathroom door", "", "livingRoom", "bathroom");
-		Doors kitchenDoor = new Doors("Kitchen entrence", "The kitchen entrence", "", "livingRoom", "kitchen");
-		Doors rearDoor = new Doors("Rear door", "The back door", "", "kitchen", "rearPorch");
-		Doors screenedDoor = new Doors ("Screen Door", "A screen door", "", "rearPorch", "screenedPorch");
-		Doors bed2ScreenDoor = new Doors("Bedroom door", "The bedroom door to the screened porch", "", "bedroom", "screenedPorch");
-		Doors bed2BathDoor = new Doors("Bathroom door", "Door between the bedroom and the bathroom", "", "bedroom", "bathroom");
-		
-	 */
+	
+	 
 }

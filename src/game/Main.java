@@ -2,6 +2,8 @@ package game;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import fixtures.Doors;
 import fixtures.Room;
 import java.util.Scanner;
 
@@ -37,14 +39,8 @@ public class Main {
 			
 			leave = p1.currentRoom.getExits();
 			
-			System.out.println("Ready can \'go\' into the:");
-			
-			for(String s : leave.keySet()) {
-				System.out.println(s);
-			}
-			System.out.println("Or Ready can \'leave\' the house");
-			
 			collectInput(input);
+			
 			try {
 			parse(ready, p1);
 			}catch (NullPointerException e) {
@@ -67,6 +63,31 @@ public class Main {
 		
 		System.out.println("-   -   -   " + youAreHere[0] + "   -   -   -\n"
 				+ youAreHere[2] + "\n\n");
+		
+		System.out.println("Ready can \'go\' into the:");
+		
+	//	for(String s : leave.keySet()) {
+	//		System.out.println(s);
+	//	}
+		Doors[] allDoors = rm.getAllDoors();
+		
+		for (int i = 0; i < allDoors.length; i++) {
+			
+			Room[] tempDoor = allDoors[i].getAdjoiningRooms();
+			
+			for (int j = 0; j < 2; j++) {
+				if (tempDoor[j].getName().equalsIgnoreCase(player.currentRoom.getName())) {
+					if (j == 0) {
+						System.out.println(tempDoor[1].getName());
+					}else {
+						System.out.println(tempDoor[0].getName());
+					}
+				
+				}
+			}
+		}
+		
+		System.out.println("Or Ready can \'leave\' the house");
 	}
 
 	private static String[] collectInput(Scanner input) {
@@ -82,7 +103,7 @@ public class Main {
 				System.out.println("Command unclear.\nTry typing go then a destination.");
 				break;
 			case "GO":
-				rm.moveRooms(command, player);
+				rm.moveRoomThroughDoor(command, player);
 				if (room1.equalsIgnoreCase(player.currentRoom.getName())) {
 					System.out.println("Ready is unsure of what to do...");
 				}else {
